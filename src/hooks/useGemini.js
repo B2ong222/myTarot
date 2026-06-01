@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`
 
 const fallbackText =
   '검은 촛불이 잠시 흔들리고 있습니다. 지금은 AI의 문이 닫혔지만, 카드의 속삭임은 분명합니다. 서두르지 말고 가장 먼저 떠오른 선택을 붙드세요.'
