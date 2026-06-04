@@ -1,30 +1,52 @@
-import { useState } from 'react'
-import OracleBox from '../components/OracleBox.jsx'
-import { useGemini } from '../hooks/useGemini.js'
+import { useState } from "react";
+import OracleBox from "../components/OracleBox.jsx";
+import { useGemini } from "../hooks/useGemini.js";
 
 const initialForm = {
-  firstName: '',
-  firstBirthDate: '',
-  secondName: '',
-  secondBirthDate: '',
-}
+  firstName: "",
+  firstBirthDate: "",
+  secondName: "",
+  secondBirthDate: "",
+};
 
 function CompatibilityPage() {
-  const [form, setForm] = useState(initialForm)
-  const [result, setResult] = useState('')
-  const { generateOracle, loading, error } = useGemini()
+  const [form, setForm] = useState(initialForm);
+  const [result, setResult] = useState("");
+  const { generateOracle, loading, error } = useGemini();
 
   function updateForm(event) {
-    const { name, value } = event.target
-    setForm((current) => ({ ...current, [name]: value }))
+    const { name, value } = event.target;
+
+    setForm((current) => ({
+      ...current,
+      [name]: value,
+    }));
   }
 
   async function submitCompatibility(event) {
-    event.preventDefault()
-    const oracle = await generateOracle(
-      `${form.firstName}(${form.firstBirthDate})와 ${form.secondName}(${form.secondBirthDate})의 궁합을 분석해줘. 끌림, 충돌, 오래가기 위한 조언을 포함해줘.`,
-    )
-    setResult(oracle)
+    event.preventDefault();
+
+    const oracle = await generateOracle(`
+${form.firstName} (${form.firstBirthDate})
+${form.secondName} (${form.secondBirthDate})
+
+두 사람의 연애 궁합을 분석해줘.
+
+반드시 아래 형식으로 답변해줘.
+
+💖 궁합 점수: XX%
+
+💘 서로 끌리는 점
+- 한 문장
+
+⚡ 주의할 점
+- 한 문장
+
+💕 한 줄 조언
+- 한 문장
+`);
+
+    setResult(oracle);
   }
 
   return (
@@ -34,43 +56,73 @@ function CompatibilityPage() {
         <h2>궁합</h2>
       </div>
 
-      <form className="panel form-grid two-column-form" onSubmit={submitCompatibility}>
+      <form
+        className="panel form-grid two-column-form"
+        onSubmit={submitCompatibility}
+      >
         <label>
           첫 번째 이름
-          <input name="firstName" onChange={updateForm} required type="text" value={form.firstName} />
+          <input
+            type="text"
+            name="firstName"
+            value={form.firstName}
+            onChange={updateForm}
+            required
+          />
         </label>
+
         <label>
           첫 번째 생년월일
           <input
+            type="date"
             name="firstBirthDate"
+            value={form.firstBirthDate}
             onChange={updateForm}
             required
-            type="date"
-            value={form.firstBirthDate}
           />
         </label>
+
         <label>
           두 번째 이름
-          <input name="secondName" onChange={updateForm} required type="text" value={form.secondName} />
+          <input
+            type="text"
+            name="secondName"
+            value={form.secondName}
+            onChange={updateForm}
+            required
+          />
         </label>
+
         <label>
           두 번째 생년월일
           <input
+            type="date"
             name="secondBirthDate"
+            value={form.secondBirthDate}
             onChange={updateForm}
             required
-            type="date"
-            value={form.secondBirthDate}
           />
         </label>
-        <button className="primary-button" type="submit">
-          궁합 보기
+
+        <button
+          className="primary-button"
+          type="submit"
+          disabled={loading}
+        >
+          {loading ? "궁합 보는 중..." : "궁합 보기"}
         </button>
       </form>
 
-      {result || loading ? <OracleBox title="두 사람의 그림자 궁합" text={result} loading={loading} error={error} /> : null}
+      {(result || loading) && (
+        <OracleBox
+          title="💖 두 사람의 궁합 결과"
+          text={result}
+          loading={loading}
+          error={error}
+        />
+      )}
     </div>
-  )
+  );
 }
 
-export default CompatibilityPage
+export default CompatibilityPage;

@@ -128,7 +128,7 @@ function TarotPage() {
               />
             ))}
           </div>
-          {allRevealed && loading ? <p className="oracle-loading">세 시간의 그림자를 엮는 중...</p> : null}
+          {allRevealed && loading ? <p className="oracle-loading">로딩 중...</p> : null}
         </section>
       ) : null}
 
